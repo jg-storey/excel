@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VBA Chart</title>
+
+    <link href="prism.css" rel="stylesheet" />
+    <link href="style.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow&display=swap" rel="stylesheet"> 
+
+
+
+</head>
+<body>
+
+    <button onclick="topFunction()" id="myBtn" title="Go to top"><i class="fa fa-chevron-up"></i></button> 
+
+    <div class="headerdiv" id="hdiv">
+    <div class="title">Plot an Excel Chart with VBA</div>
+    </div>
+
+    <p>We begin with the following data in Excel Sheet1</p>
+    <img src="img/data.png" alt="Some Excel data.">
+
+    <p>Enable the Developer tab in the ribbon (File > Options > Customize Ribbon)</p>
+    <img src="img/ribbon.png" alt="Ribbon options dialog.">
+
+    <p>In the Developer tab, open the Visual Basic editor</p>
+    <img src="img/openvba.png" alt="Open Visual Basic button.">
+
+    <p>Double click Sheet1, paste the code below into the editor and run it.</p>
+    <img src="img/vba.png" alt="Paste code into the editor.">
+
+    <p>The code.</p>
+    <div class="codebox">
+        <pre class="line-numbers"><code class="language-vba">
+Sub CreateChart()
+
+  'Delete existing chart
+  If ActiveSheet.ChartObjects.Count > 0 Then
+      ActiveSheet.ChartObjects.Delete
+  End If
+
+  Dim cht As ChartObject
+
+  'Create a chart
+    Set cht = ActiveSheet.ChartObjects.Add( _
+      Left:=200, _
+      Width:=450, _
+      Top:=100, _
+      Height:=250)
+
+  'Determine the chart type
+  cht.Chart.ChartType = xlXYScatterLines
+    
+  'Chart title
+  cht.Chart.HasTitle = True
+  cht.Chart.ChartTitle.Text = "Voltages vs Temperature"
+    
+
+  'Give chart some data
+  cht.Chart.SeriesCollection.NewSeries
+  cht.Chart.SeriesCollection(1).XValues = ActiveSheet.Range("A2:A100")
+  cht.Chart.SeriesCollection(1).Values = ActiveSheet.Range("B2:B100")
+  cht.Chart.SeriesCollection(1).Name = ActiveSheet.Range("B1")
+  cht.Chart.SeriesCollection.NewSeries
+  cht.Chart.SeriesCollection(2).XValues = ActiveSheet.Range("A2:A100")
+  cht.Chart.SeriesCollection(2).Values = ActiveSheet.Range("C2:C100")
+  cht.Chart.SeriesCollection(2).Name = ActiveSheet.Range("C1")
+    
+  'Axis titles
+  cht.Chart.Axes(xlCategory).HasTitle = True
+  cht.Chart.Axes(xlCategory).AxisTitle.Caption = ActiveSheet.Range("A1")
+  cht.Chart.Axes(xlValue).HasTitle = True
+  cht.Chart.Axes(xlValue).AxisTitle.Caption = "Voltage"
+  'Move the label
+  cht.Chart.Axes(xlValue).AxisTitle.Select
+  Selection.Left = 5
+        
+End Sub       
+            </code>
+        </pre>
+</div>
+
+<p>You should end up with a chart like this. (I've added a button to run the code.)</p>
+<img src="img/plot.png" alt="The resulting chart.">
+
+
+
+    
+    <script src="prism.js"></script>
+    <script>
+         //Get the button:
+  mybutton = document.getElementById("myBtn");
+  
+  // When the user scrolls down 20px from the top of the document, show the button
+  window.onscroll = function() {scrollFunction()};
+  
+  function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+      mybutton.style.display = "block";
+    } else {
+      mybutton.style.display = "none";
+    }
+  }
+  
+  // When the user clicks on the button, scroll to the top of the document
+  function topFunction() {
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+  } 
+    </script>
+</body>
+</html>
